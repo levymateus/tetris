@@ -1,3 +1,5 @@
+import './style.css'
+
 const PAINT_RATE = 60; // Paints per second
 
 function uuidv4() {

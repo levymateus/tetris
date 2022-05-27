@@ -1,4 +1,5 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const env = require('dotenv').config();
 
 if (env.error) {
@@ -26,12 +27,27 @@ module.exports = ({
     filename: mainfilename,
   }
 
+  const rules = [
+    {
+      test: /\.css$/i,
+      use: ["style-loader", "css-loader"],
+    },
+  ]
+
   const config = {
     entry: entryFilePath,
     mode: mode,
     stats: stats,
     devServer: devServer,
     output: output,
+    module: {
+      rules: rules,
+    },
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: 'src/index.html'
+      })
+    ]
   }
 
   return config
