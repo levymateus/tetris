@@ -7,29 +7,41 @@ class Tile extends GameObject {
     this.speed = speed;
     this.freeze = freeze;
     this.color = color;
-    this.appendChild(new Square(this.position.x, this.position.y, 32, 32).setColor(color.r, color.g, color.b));
   }
 
   setFreeze() {
     if (!this.freeze) {
       window.dispatchEvent(new CustomEvent('tile-freeze', {
         detail: { node: this }
-      }))
+      }));
     }
     this.freeze = true;
   }
 
+  canMove(direction) {
+    const { width } = Game.getInstance().world;
+    if (direction === 'right') {
+      return !this.children.some((node) => node.position.x + node.width + 32 >= width)
+    }
+    if (direction === 'left') {
+      return !this.children.some((node) => node.position.x + node.width - 32 <= 0)
+    }
+  }
+
   onKeyDown(key) {
-    const world = Game.getInstance().world;
-    if (!this.freeze && key === 'd' && this.position.x + 32 < world.width) {
+    if (!this.freeze && key === 'd' && this.canMove('right')) {
       this.move(32, 0);
     }
-    if (!this.freeze && key === 'a' && this.position.x > 0) {
+    if (!this.freeze && key === 'a' && this.canMove('left')) {
       this.move(-32, 0);
     }
   }
 
   onCollide() {
+    this.setFreeze();
+  }
+
+  onOutOfBounds() {
     this.setFreeze();
   }
 
@@ -52,7 +64,9 @@ class Tile extends GameObject {
       case Input.type.KEYBOARD:
         return this.onKeyDown(props.key);
       case 'collide':
-        return this.onCollide()
+        return this.onCollide();
+      case 'out-of-bounds':
+        return this.onOutOfBounds();
       default:
         return;
     }
