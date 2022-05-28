@@ -1,4 +1,43 @@
-import Game, { Scene, Square, GameObject, Vector2, Color, Input, randomIntFromInterval } from './core';
+import Game, { Scene, Square, GameObject, Vector2, Color, Input, randomIntFromInterval, Collider } from './core';
+
+const tiles = [
+  (speed) => {
+    const color = Color.random()
+    const tile =  new Tile(
+      new Vector2(randomIntFromInterval(0, 12) * 32, 0),
+      speed,
+      false,
+      color
+    );
+    tile.appendChild(new Square(tile.position.x + 1, tile.position.y + 1, 31, 31).setColor(color.r, color.g, color.b));
+    tile.appendChild(new Square(tile.position.x + 33, tile.position.y + 1, 31, 31).setColor(color.r, color.g, color.b));
+    return tile;
+  },
+  (speed) => {
+    const color = Color.random()
+    const tile =  new Tile(
+      new Vector2(randomIntFromInterval(0, 12) * 32, 0),
+      speed,
+      false,
+      color
+    );
+    tile.appendChild(new Square(tile.position.x + 1, tile.position.y + 1, 31, 31).setColor(color.r, color.g, color.b));
+    return tile;
+  },
+  (speed) => {
+    const color = Color.random()
+    const tile =  new Tile(
+      new Vector2(randomIntFromInterval(0, 12) * 32, 0),
+      speed,
+      false,
+      color
+    );
+    tile.appendChild(new Square(tile.position.x + 1, tile.position.y + 1, 31, 31).setColor(color.r, color.g, color.b));
+    tile.appendChild(new Square(tile.position.x + 33, tile.position.y + 1, 30, 31).setColor(color.r, color.g, color.b));
+    tile.appendChild(new Square(tile.position.x + 1, tile.position.y + 33, 31, 31).setColor(color.r, color.g, color.b));
+    return tile;
+  }
+]
 
 class Tile extends GameObject {
   constructor(position, speed, freeze, color) {
@@ -75,8 +114,7 @@ class Tile extends GameObject {
 
 class Tetris {
   constructor() {
-    this.speed = new Vector2(0, 0.075);
-    this.tiles = 1;
+    this.speed = new Vector2(0, 0.09);
 
     this.game = new Game({
       title: 'Tetris',
@@ -87,42 +125,24 @@ class Tetris {
     const level = new Scene();
     this.game.addScene(level);
 
-    const tile = new Tile(
-      new Vector2(randomIntFromInterval(0, 12) * 32, 0),
-      this.speed,
-      false,
-      Color.random()
-    );
-    level.appendChild(tile);
+    const createTile = tiles[randomIntFromInterval(0, tiles.length - 1)]
+    level.appendChild(createTile(this.speed));
 
-    window.addEventListener('tile-freeze', (evt) => {
-      if (this.tiles >= 10) {
-        return this.game.stop();
-      }
+    window.addEventListener('tile-freeze', () => {
+      const createTile = tiles[randomIntFromInterval(0, tiles.length - 1)]
 
-      const tile = new Tile(
-        new Vector2(randomIntFromInterval(0, 12) * 32, 0),
-        this.speed,
-        false,
-        Color.random()
-      );
-
-      level.appendChild(tile);
-      this.tiles += 1;
-    })
+      level.appendChild(createTile(this.speed));
+    });
 
     window.addEventListener('keydown', (evt) => {
       if (evt.key === ' ') {
         this.game.pause();
       }
-    })
+    });
 
     return this;
   }
 
-  start() {
-    this.game.start();
-  }
 }
 
-new Tetris().start();
+new Tetris();
