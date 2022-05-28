@@ -12,11 +12,14 @@ function uuidv4() {
 }
 
 function randomIntFromInterval(min, max) { // min and max included
-  return Math.floor(Math.random() * (max - min + 1) + min)
+  return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
 let windowIsLoaded = false;
 
+/**
+ * The base class of all elements in a scene.
+ */
 class Node {
   constructor() {
     this.id = uuidv4();
@@ -76,6 +79,9 @@ class Collider {
 
 }
 
+/**
+ * The base behaviour of any element in the game.
+ */
 class GameObject extends Node {
   constructor(name, x, y) {
     super();
@@ -280,6 +286,9 @@ class Square extends Shape {
   }
 }
 
+/**
+ * Manage the scene.
+ */
 class World extends Node {
   constructor(width, height) {
     super(0, 0);
