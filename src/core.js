@@ -51,22 +51,27 @@ class Node {
 
 class Collider {
   constructor() {
+    return this;
+  }
 
+  static testSquares(left, right) {
+    return left.position.x < right.position.x + right.width &&
+      left.position.x + left.width > right.position.x &&
+      left.position.y < right.position.y + right.height &&
+      left.height + left.position.y > right.position.y
   }
 
   test(gameObject) {
     const nodes = Game.getInstance()?.world?.scene.children;
 
-    function testSquares(left, right) {
-      return left.position.x < right.position.x + right.width &&
-        left.position.x + left.width > right.position.x &&
-        left.position.y < right.position.y + right.height &&
-        left.height + left.position.y > right.position.y
+    const world = Game.getInstance().world;
+    if (gameObject.position.y + gameObject.height >= world.height || gameObject.position.y < 0 || gameObject.position.x + gameObject.width >= world.width || gameObject.position.x < 0) {
+      return [world];
     }
 
-    const colliders = nodes.filter((node) => gameObject.id !== node.id && gameObject instanceof Square && node instanceof Square && testSquares(gameObject, node))
+    const colliders = nodes.filter((node) => gameObject.id !== node.id && gameObject instanceof Square && node instanceof Square && Collider.testSquares(gameObject, node));
 
-    return colliders
+    return colliders;
   }
 
 }
@@ -237,14 +242,19 @@ class Square extends Shape {
     this.width = width;
     this.height = height;
     this.color = new Color(0, 0, 0);
-    this.accept(new Collider())
+    this.accept(new Collider());
   }
 
   beforeUpdate() {
     if (this.collider) {
       const colliders = this.collider.test(this);
       if (colliders.length) {
-        colliders.forEach((collisor) => this.notify('collide', { collisor }))
+        colliders.forEach((collisor) => {
+          if (collisor instanceof World) {
+            return this.notify('out-of-bounds', { collisor: this })
+          }
+          return this.notify('collide', { collisor })
+        });
       }
     }
   }
