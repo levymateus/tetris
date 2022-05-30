@@ -1,9 +1,9 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const env = require('dotenv').config();
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const env = require('dotenv').config()
 
 if (env.error) {
-  throw new Error(env.error.message);
+  throw new Error(env.error.message)
 }
 
 const mainfilename = 'game.js'
@@ -51,4 +51,4 @@ module.exports = ({
   }
 
   return config
-};
+}
