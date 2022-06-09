@@ -1,12 +1,13 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { resolve } = require('path')
 const env = require('dotenv').config()
 
 if (env.error) {
   throw new Error(env.error.message)
 }
 
-const mainfilename = 'game.js'
+const mainfilename = 'index.ts'
 const publicStaticPath = path.join(__dirname, 'public')
 const entryFilePath = path.join(__dirname, 'src', mainfilename)
 
@@ -23,8 +24,10 @@ module.exports = ({
   }
 
   const output = {
+    publicPath: '/',
     path: publicStaticPath,
-    filename: mainfilename,
+    filename: 'index.js',
+    clean: true
   }
 
   const rules = [
@@ -32,20 +35,31 @@ module.exports = ({
       test: /\.css$/i,
       use: ["style-loader", "css-loader"],
     },
+    {
+      test: /\.ts?$/,
+      use: 'ts-loader',
+      exclude: /node_modules/,
+    },
   ]
+
+  const extensions = ['.ts', '.js']
 
   const config = {
     entry: entryFilePath,
     mode: mode,
     stats: stats,
+    devtool: 'inline-source-map',
     devServer: devServer,
     output: output,
+    resolve: {
+      extensions,
+    },
     module: {
       rules: rules,
     },
     plugins: [
       new HtmlWebpackPlugin({
-        template: 'src/index.html'
+        template: 'index.html'
       })
     ]
   }
