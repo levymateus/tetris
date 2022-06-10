@@ -1,0 +1,28 @@
+{
+  "name": "@tetris/tetris",
+  "description": "Web browser tetris game",
+  "version": "1.0.0",
+  "main": "index.html",
+  "license": "MIT",
+  "author": "levymateusmacedo@gmail.com",
+  "dependencies": {
+    "typescript": "^4.7.3"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.27.1",
+    "@typescript-eslint/parser": "^5.27.1",
+    "css-loader": "^6.7.1",
+    "dotenv": "^16.0.1",
+    "eslint": "^8.17.0",
+    "html-webpack-plugin": "^5.5.0",
+    "style-loader": "^3.3.1",
+    "ts-loader": "^9.3.0",
+    "webpack": "^5.72.1",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.9.0"
+  },
+  "scripts": {
+    "dev": "webpack serve --env mode=development",
+    "build": "webpack --env mode=production"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "@tetris/core",
+  "version": "1.0.0",
+  "description": "Core 2D browser game engine",
+  "main": "build/index.js",
+  "author": "levymateusmacedo@gmail.com",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "lint": "yarn eslint"
+  },
+  "dependencies": {
+    "typescript": "^4.7.3"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.27.1",
+    "@typescript-eslint/parser": "^5.27.1"
+  }
+}
