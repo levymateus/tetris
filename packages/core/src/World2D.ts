@@ -1,9 +1,8 @@
-import { Viewport } from './Viewport'
+import Viewport from './Viewport'
 
-export class World2D {
-  public viewport: Viewport
-
+export default class World2D {
   private _context: CanvasRenderingContext2D
+  public viewport: Viewport
 
   constructor(viewport: Viewport) {
     this.viewport = viewport
@@ -25,7 +24,7 @@ export class World2D {
 
   }
 
-  get context() {
+  get context(): CanvasRenderingContext2D {
     return this._context
   }
 }

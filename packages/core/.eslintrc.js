@@ -14,6 +14,6 @@ module.exports = {
     ],
     "rules": {
         "semi": ["error", "never"],
-        "no-unused-vars": ["warning", { "vars": "local", "args": "after-used", "ignoreRestSiblings": false }]
+        "no-unused-vars": ["warn", { "vars": "local", "args": "after-used", "ignoreRestSiblings": false }]
     },
 }

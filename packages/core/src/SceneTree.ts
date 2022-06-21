@@ -1,61 +1,46 @@
-import { Viewport } from './Viewport'
-import { SceneTreeIterator } from './SceneTreeIterator'
-import { Iterable, Iterator } from './Interator'
-import { Node } from './Node'
-import { GameObject } from './GameObject'
-import Math from './Math'
+import Viewport from './Viewport'
+import Tree from './Tree'
+import GameObject from './GameObject'
+import transform from './Transform2DSystem'
+import * as Kinematic2D from './Kinematic2D'
 
-function mainLoop(sceneTree: SceneTree) {
-  const it = sceneTree.createIterator()
-  const viewport = sceneTree.root
-  const canvas = viewport.getCanvas()
+export default class SceneTree extends Tree {
+  private _pause: boolean
 
-  viewport.clear()
+  constructor(viewport: Viewport) {
+    super(viewport)
+    this._pause = false
+    this.mainLoop()
+  }
 
-  while (it.hasNext()) {
-    const node = it.next()
-    if (node instanceof GameObject) {
-      node.onUpdate(0.1)
+  get viewport(): Viewport {
+    return this.root as Viewport
+  }
 
-      // rotation
-      canvas.save()
+  togglePause() {
+    this._pause = !this._pause
+  }
 
-      canvas.translate(node.centre.x, node.centre.y)
-      canvas.rotate(Math.degressToRadian(node.rotation))
-      canvas.translate(-node.centre.x, -node.centre.y)
-
-      node.draw(canvas)
-
-      canvas.restore()
-      // end rotation
+  private update(): void {
+    const it = this.createIterator()
+    while (it.hasNext()) {
+      const node = it.next()
+      if (node instanceof GameObject) node.onUpdate(0.1)
     }
   }
 
-  window.requestAnimationFrame(() => mainLoop(sceneTree))
-}
+  private mainLoop(): void {
+    const frameRequest = () => {
+      if (!this._pause) {
+        this.update()
+      }
 
-export class SceneTree implements Iterable<Node> {
-  private _root: Viewport
-  private _pause: boolean = false
+      const canvas = this.viewport.getCanvas()
+      transform(canvas, this.viewport, this)
+      Kinematic2D.execute(this)
 
-  constructor(viewport: Viewport) {
-    this._root = viewport
-    window.requestAnimationFrame(() => mainLoop(this))
-  }
-
-  createIterator(): Iterator<Node> {
-    return new SceneTreeIterator(this)
-  }
-
-  set pause(pause: boolean) {
-    this._pause = pause
-  }
-
-  get pause() {
-    return this._pause
-  }
-
-  get root() {
-    return this._root
+      window.requestAnimationFrame(frameRequest)
+    }
+    window.requestAnimationFrame(frameRequest)
   }
 }

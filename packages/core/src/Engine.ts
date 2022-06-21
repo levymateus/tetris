@@ -1,22 +1,34 @@
-import { SceneTree } from './SceneTree'
-import { Square } from './Shape'
-import { Viewport } from './Viewport'
+import SceneTree from './SceneTree'
+import Viewport from './Viewport'
+import { Options } from './type'
 
-export class Engine {
-  private instance?: Engine
+export default class Engine {
+  static _instance: Engine
+  private _sceneTree: SceneTree
 
-  constructor(options?: { viewport?: { width?: number; height?: number } }) {
+  constructor(options?: Options) {
     const viewport = new Viewport(
-      options?.viewport?.width || 0,
-      options?.viewport?.height || 0
+      options?.viewport?.width || window.innerWidth,
+      options?.viewport?.height || window.innerHeight
     )
-    new SceneTree(viewport)
+
+    this._sceneTree = new SceneTree(viewport)
+
+    if (!Engine._instance) {
+      Engine._instance = this
+    }
+
+    return Engine._instance
   }
 
-  getInstance() {
-    if (!this.instance) {
-      this.instance = new Engine()
+  get sceneTree(): SceneTree {
+    return this._sceneTree
+  }
+
+  static getInstance() {
+    if (!Engine._instance) {
+      Engine._instance = new Engine()
     }
-    return this.instance
+    return Engine._instance
   }
 }

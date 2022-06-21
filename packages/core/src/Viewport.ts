@@ -1,7 +1,7 @@
-import { Node } from './Node'
-import { World2D } from './World2D'
+import Node from './Node'
+import World2D from './World2D'
 
-export class Viewport extends Node {
+export default class Viewport extends Node {
   public width: number = 0
   public height: number = 0
 
@@ -14,7 +14,7 @@ export class Viewport extends Node {
     this.world2D = new World2D(this)
   }
 
-  getCanvas() {
+  getCanvas(): CanvasRenderingContext2D {
     return this.world2D.context
   }
 

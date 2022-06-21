@@ -1,49 +1,39 @@
-import { Drawable } from "./Drawable"
-import { Vector2D } from "./Math"
+import Node2D from "./Node2D"
+import { Vector2, Vector3 } from "./Math"
+import Transform2D from "./Transform2D"
 
-export class GameObject extends Drawable {
-  public centre: Vector2D
-  public rotation: number
-  public scale: number
+/**
+ * A basic GameObject with can be self status change, updated and then drawed in the scene.
+ *
+ * @extends Node
+ * @extends Node2D
+ */
+export default class GameObject extends Node2D {
+  private _transform: Transform2D
 
-  private _position: Vector2D
-
-  constructor(position: Vector2D, name?: string, rotation?: number, scale?: number) {
+  constructor(position: Vector2, name?: string, rotation?: Vector3, scale?: Vector2) {
     super(name)
-    this._position = position
-    this.rotation = rotation || 0
-    this.centre = position
-    this.scale = scale || 1.0
-  }
-
-  get position() {
-    return this._position
-  }
-
-  protected set position(position: Vector2D) {
-    this._position = position
-  }
-
-  translate(vec2: Vector2D): void {
-    this.position = this.position.add(vec2)
-  }
-
-  rotate(degress: number, centre?: Vector2D) {
-    this.rotation += degress
-    if (centre) {
-      this.centre = centre
+    this._transform = new Transform2D(
+      position,
+      rotation || new Vector3,
+      scale || new Vector2
+      )
     }
+
+    get transform() {
+      return this._transform
+    }
+
+    // eslint-disable-next-line no-unused-vars
+    draw(_context: CanvasRenderingContext2D, _position: Vector2): void {
+    return
   }
 
-  draw(context: CanvasRenderingContext2D): void {
-    throw new Error("Method not implemented.")
-  }
-
-  onStart() {
-
-  }
-
-  onUpdate(delta: number) {
-
+  /**
+   * This method is fired on each frame.
+   * @param delta - the timelapsed beetwen frames in milliseconds
+   */
+  onUpdate(delta: number): void {
+    return void delta
   }
 }

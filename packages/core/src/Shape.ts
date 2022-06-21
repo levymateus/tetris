@@ -1,62 +1,51 @@
-import { Vector2D } from './Math'
-import { GameObject } from './GameObject'
+import GameObject from './GameObject'
+import { Vector2 } from './Math'
 
-export class Shape2D extends GameObject {
+export default class Shape2D extends GameObject {
   public color: string
+  public visible: boolean
 
   constructor(
-    position: Vector2D,
-    rotation: number = 0.0,
-    scale: number = 1
+    position: Vector2
   ) {
-    super(position, 'Shape2D', rotation, scale)
+    super(position, 'Shape2D')
     this.color = 'black'
+    this.visible = true
   }
 
-  draw(context: CanvasRenderingContext2D): void {
+  // eslint-disable-next-line no-unused-vars
+  draw(_context: CanvasRenderingContext2D, _position: Vector2): void {
     throw new Error('This method is not implemented')
   }
 }
 
-export class Square extends Shape2D {
+export class Rect extends Shape2D {
   private _width: number = 0
   private _height: number = 0
 
-  constructor(x: number, y: number, w: number, h: number) {
-    super(new Vector2D(x, y))
+  constructor(position: Vector2, w: number, h: number) {
+    super(position)
     this._width = w
     this._height = h
   }
 
-  get width() {
+  get width(): number {
     return this._width
   }
 
-  get height() {
+  get height(): number {
     return this._height
   }
 
-  draw(context: CanvasRenderingContext2D) {
-    context.fillStyle = this.color
-    context.fillRect(
-      this.position.x,
-      this.position.y,
-      this._width,
-      this._height
-    )
-  }
-
-  onUpdate(delta: number): void {
-    const centre = new Vector2D(
-      this.position.x + this.width / 2,
-      this.position.y + this.height / 2
-    )
-
-    this.translate(new Vector2D(0, 32 * 0.01))
-    this.rotate(45 * 0.01, centre)
-
-    if (this.position.y > 300) {
-      this.position.y = 1
+  draw(context: CanvasRenderingContext2D, position: Vector2): void {
+    if (this.visible) {
+      context.fillStyle = this.color
+      context.fillRect(
+        position.x,
+        position.y,
+        this.width,
+        this.height
+      )
     }
   }
 }

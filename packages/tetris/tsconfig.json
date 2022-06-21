@@ -5,7 +5,6 @@
     "strict": true,
     "skipLibCheck": true,
     "outDir": "./public",
-    "sourceMap": true,
-    
+    "sourceMap": true
   }
 }
